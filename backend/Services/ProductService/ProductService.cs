@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Errors;
+using Models;
 using Repositories;
 
 namespace Services;
@@ -17,5 +18,26 @@ public class ProductService(IProductRepository repository) : IProductService
         Product? product = await repository.GetProductById(productId);
         
         return product;
+    }
+
+    public async Task<string> CreateProductAsync(ProductInsertRequest product)
+    {
+        var isProductValid = product
+            .WithValidName()
+            .WithPositivePrice()
+            .WithNonNegativeStockQuantity()
+            .Validate();
+
+        if (!isProductValid) throw new ValidationException("Product is invalid");
+
+        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
+        
+        if (!isProductValid) throw new ValidationException("Product name already exists");
+        
+        var newProduct = Product.CreateFromInsertRequest(product);
+        
+        await repository.AddProduct(newProduct);
+        
+        return newProduct.Id.ToString();
     }
 }

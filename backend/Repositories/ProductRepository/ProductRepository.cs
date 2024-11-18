@@ -5,7 +5,7 @@ namespace Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private static List<Product> Products = [
+    private List<Product> Products = [
         new Product("Pomme", "Fruit", 1.00M, 10),
         new Product("Poire", "Fruit", 1.50M, 5),
     ];
@@ -18,5 +18,19 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> GetProductById(Guid id)
     {
         return await Task.FromResult(Products.FirstOrDefault(p => p.Id == id));
+    }
+
+    public Task<bool> CheckIfProductNameExists(string name)
+    {
+        var product = Products.FirstOrDefault(p => p.LowerCaseProductName == name);
+        
+        return Task.FromResult(product == null);
+    }
+
+    public async Task<bool> AddProduct(Product product)
+    {
+        this.Products.Add(product);
+        
+        return await Task.FromResult(true);
     }
 }
