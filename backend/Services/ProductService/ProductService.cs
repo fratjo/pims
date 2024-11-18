@@ -1,4 +1,5 @@
-﻿using Errors;
+﻿using System.Net;
+using Errors;
 using Models;
 using Repositories;
 
@@ -28,16 +29,43 @@ public class ProductService(IProductRepository repository) : IProductService
             .WithNonNegativeStockQuantity()
             .Validate();
 
-        if (!isProductValid) throw new ValidationException("Product is invalid");
+        if (!isProductValid) throw new ValidationException("Product is invalid", HttpStatusCode.BadRequest);
 
         isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
         
-        if (!isProductValid) throw new ValidationException("Product name already exists");
+        if (!isProductValid) throw new ValidationException("Product name already exists", HttpStatusCode.Conflict);
         
         var newProduct = Product.CreateFromInsertRequest(product);
         
         await repository.AddProduct(newProduct);
         
         return newProduct.Id.ToString();
+    }
+
+    public async Task<Product?> UpdateProductAsync(string id, ProductUpdateRequest product)
+    {   
+        var guid = Guid.Parse(id);
+        
+        var p = await repository.GetProductById(guid);
+        
+        if (p == null) throw new ValidationException("Product not found", HttpStatusCode.NotFound);
+        
+        var isProductValid = product
+            .WithValidName()
+            .WithPositivePrice()
+            .WithNonNegativeStockQuantity()
+            .Validate();
+        
+        if (!isProductValid) throw new ValidationException("Product is invalid", HttpStatusCode.BadRequest);
+        
+        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
+        
+        if (!isProductValid) throw new ValidationException("Product name already exists", HttpStatusCode.Conflict);
+        
+        p.Update(product);
+        
+        await repository.UpdateProduct(p);
+        
+        return p;
     }
 }
