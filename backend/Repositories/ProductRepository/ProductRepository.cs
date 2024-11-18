@@ -33,4 +33,17 @@ public class ProductRepository : IProductRepository
         
         return await Task.FromResult(true);
     }
+
+    public async Task<bool> UpdateProduct(Product product)
+    {
+        int index = this.Products.FindIndex(p => p.Id == product.Id);
+
+        if (index != -1)
+        {
+            this.Products[index] = product;
+            return await Task.FromResult(true);
+        }
+        
+        return await Task.FromResult(false);
+    }
 }
