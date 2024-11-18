@@ -1,4 +1,5 @@
 using System.Globalization;
+using Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -38,7 +39,22 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Product>> CreateProduct([FromBody] ProductInsertRequest product)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var NewId = await service.CreateProductAsync(product);
+
+                return CreatedAtAction(nameof(GetProductById), new { id = NewId }, NewId);
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
         
         #endregion
@@ -52,7 +68,6 @@ namespace WebApi.Controllers
         {
             throw new NotImplementedException();
         }
-        
         
         #endregion
     }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{8E461B4D-56BD-401D-BE1A-4D78CC45EA21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptions", "Exceptions\Exceptions.csproj", "{01E98763-7EED-403C-BEE0-2689C5811856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{8E461B4D-56BD-401D-BE1A-4D78CC45EA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E461B4D-56BD-401D-BE1A-4D78CC45EA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E461B4D-56BD-401D-BE1A-4D78CC45EA21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01E98763-7EED-403C-BEE0-2689C5811856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01E98763-7EED-403C-BEE0-2689C5811856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01E98763-7EED-403C-BEE0-2689C5811856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01E98763-7EED-403C-BEE0-2689C5811856}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
