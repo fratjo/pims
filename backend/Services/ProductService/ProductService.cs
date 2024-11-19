@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using Errors;
 using Models;
-using Repositories;
+using Repositories.ProductRepository;
 
-namespace Services;
+namespace Services.ProductService;
 
 public class ProductService(IProductRepository repository) : IProductService
 {
@@ -18,6 +18,8 @@ public class ProductService(IProductRepository repository) : IProductService
         
         Product? product = await repository.GetProductById(productId);
         
+        if (product is null) throw new NotFoundException($"Product with id: {id} was not found");
+        
         return product;
     }
 
@@ -29,11 +31,11 @@ public class ProductService(IProductRepository repository) : IProductService
             .WithNonNegativeStockQuantity()
             .Validate();
 
-        if (!isProductValid) throw new BaseApplicationException("Product is invalid", HttpStatusCode.BadRequest);
+        if (!isProductValid) throw new FieldValidationException("Product's Fields are invalid");
 
         isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
         
-        if (!isProductValid) throw new BaseApplicationException("Product name already exists", HttpStatusCode.Conflict);
+        if (!isProductValid) throw new FieldConflictException("Product name already exists");
         
         var newProduct = Product.CreateFromInsertRequest(product);
         
@@ -48,7 +50,7 @@ public class ProductService(IProductRepository repository) : IProductService
         
         var p = await repository.GetProductById(guid);
         
-        if (p == null) throw new BaseApplicationException("Product not found", HttpStatusCode.NotFound);
+        if (p == null) throw new NotFoundException($"Product with id: {id} was not found");
         
         var isProductValid = product
             .WithValidName()
@@ -56,11 +58,11 @@ public class ProductService(IProductRepository repository) : IProductService
             .WithNonNegativeStockQuantity()
             .Validate();
         
-        if (!isProductValid) throw new BaseApplicationException("Product is invalid", HttpStatusCode.BadRequest);
+        if (!isProductValid) throw new FieldValidationException("Product's Fields are invalid");
         
-        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
+        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName!.ToLower());
         
-        if (!isProductValid) throw new BaseApplicationException("Product name already exists", HttpStatusCode.Conflict);
+        if (!isProductValid) throw new FieldConflictException("Product name already exists");
         
         p.Update(product);
         

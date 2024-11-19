@@ -1,6 +1,10 @@
 ﻿namespace Models;
 
-public class Product(string productName, string? productDescription, decimal productPrice, int productStockQuantity)
+public class Product(
+    string productName, 
+    string? productDescription, 
+    decimal productPrice, 
+    int productStockQuantity)
 { 
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = productName;
@@ -69,7 +73,8 @@ public record ProductUpdateRequest(
 
     public ProductUpdateRequest WithValidName()
     {
-        _isValid = (_isValid && !string.IsNullOrWhiteSpace(ProductName)) || string.IsNullOrWhiteSpace(ProductName);
+        _isValid = (_isValid && !string.IsNullOrWhiteSpace(ProductName)) 
+                   || string.IsNullOrWhiteSpace(ProductName);
         return this;
     }
 
@@ -81,7 +86,8 @@ public record ProductUpdateRequest(
 
     public ProductUpdateRequest WithNonNegativeStockQuantity()
     {
-        _isValid = (_isValid && ProductStockQuantity >= 0) || ProductStockQuantity is null;
+        _isValid = (_isValid && ProductStockQuantity >= 0) 
+                   || ProductStockQuantity is null;
         return this;
     }
 

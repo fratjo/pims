@@ -4,30 +4,37 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services;
+using Services.ProductService;
 
 namespace WebApi.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController(IProductService service) : ControllerBase
+    public class ProductController(IProductService service, IEnumerable<IExceptionHandler> exceptionHandlers) : ControllerBase
     {
         #region Gets
         
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IEnumerable<Product>> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
-            return await service.GetAllProductsAsync();
+            return await this.HandleRequestAsync(async () =>
+            {
+                var products = await service.GetAllProductsAsync();
+                return Ok(products);
+            }, exceptionHandlers);
         }
         
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Product>> GetProductById(string id)
+        public async Task<IActionResult> GetProductById(string id)
         {
-            Product? product = await service.GetProductByIdAsync(id);
-            
-            return product is not null ? Ok(product) : NotFound();
+            return await this.HandleRequestAsync(async () =>
+            {
+                var product = await service.GetProductByIdAsync(id);
+                return Ok(product);
+            }, exceptionHandlers);
         }
         
         #endregion
@@ -38,24 +45,13 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<Product>> CreateProduct([FromBody] ProductInsertRequest product)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductInsertRequest product)
         {
-            try
+            return await this.HandleRequestAsync(async () =>
             {
-                var NewId = await service.CreateProductAsync(product);
-
-                return CreatedAtAction(nameof(GetProductById), new { id = NewId }, NewId);
-            }
-            catch (BaseApplicationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            
+                var newId = await service.CreateProductAsync(product);
+                return CreatedAtAction(nameof(GetProductById), new { id = newId }, newId);
+            }, exceptionHandlers);
         }
         
         #endregion
@@ -66,23 +62,13 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<Product>> UpdateProduct(string id, [FromBody] ProductUpdateRequest product)
+        public async Task<IActionResult> UpdateProduct(string id, [FromBody] ProductUpdateRequest product)
         {
-            try
+            return await this.HandleRequestAsync(async () =>
             {
-                var p = await service.UpdateProductAsync(id, product);
-                
-                return Ok(p);
-            }
-            catch (BaseApplicationException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+                var updatedProduct = await service.UpdateProductAsync(id, product);
+                return Ok(updatedProduct);
+            }, exceptionHandlers);
         }
         
         #endregion
