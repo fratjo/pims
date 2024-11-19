@@ -1,5 +1,8 @@
+using Errors;
 using Repositories;
+using Repositories.ProductRepository;
 using Services;
+using Services.ProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 builder.Services.AddSingleton<IProductService, ProductService>();
+
+builder.Services.AddExceptionHandlers();
+
+builder.Services.AddCors(option => {
+    option.AddPolicy("AllowSpecificOrigin", policy => {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,11 +42,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(
-    options  => 
-        options
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+app.UseCors("AllowSpecificOrigin");
 
 app.Run();

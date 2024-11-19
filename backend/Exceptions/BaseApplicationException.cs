@@ -28,3 +28,25 @@ public class FieldValidationException : BaseApplicationException
     {
     }
 }
+
+public class FieldConflictException : BaseApplicationException
+{
+    public FieldConflictException(string? message) : base(message, HttpStatusCode.Conflict)
+    {
+    }
+
+    public FieldConflictException(string? message, Exception? innerException) : base(message, HttpStatusCode.Conflict, innerException)
+    {
+    }
+}
+
+public class NotFoundException : BaseApplicationException
+{
+    public NotFoundException(string? message) : base(message, HttpStatusCode.NotFound)
+    {
+    }
+
+    public NotFoundException(string? message, Exception? innerException) : base(message, HttpStatusCode.NotFound, innerException)
+    {
+    }
+}

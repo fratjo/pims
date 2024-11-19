@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace Repositories;
+namespace Repositories.ProductRepository;
 
 
 public class ProductRepository : IProductRepository
