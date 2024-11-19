@@ -46,7 +46,7 @@ namespace WebApi.Controllers
 
                 return CreatedAtAction(nameof(GetProductById), new { id = NewId }, NewId);
             }
-            catch (ValidationException e)
+            catch (BaseApplicationException e)
             {
                 return BadRequest(e.Message);
             }
@@ -74,7 +74,7 @@ namespace WebApi.Controllers
                 
                 return Ok(p);
             }
-            catch (ValidationException e)
+            catch (BaseApplicationException e)
             {
                 return BadRequest(e.Message);
             }
