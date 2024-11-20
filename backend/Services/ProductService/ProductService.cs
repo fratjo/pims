@@ -7,6 +7,8 @@ namespace Services.ProductService;
 
 public class ProductService(IProductRepository repository) : IProductService
 {
+    #region Gets
+    
     public async Task<IEnumerable<Product>> GetAllProductsAsync()
     {
         return await repository.GetProducts();
@@ -22,20 +24,28 @@ public class ProductService(IProductRepository repository) : IProductService
         
         return product;
     }
+    
+    #endregion
 
+    #region Posts
+    
     public async Task<string> CreateProductAsync(ProductInsertRequest product)
     {
-        var isProductValid = product
-            .WithValidName()
-            .WithPositivePrice()
-            .WithNonNegativeStockQuantity()
-            .Validate();
+        var validationResults = ProductValidation.ValidateProduct(product);
 
-        if (!isProductValid) throw new FieldValidationException("Product's Fields are invalid");
+        if (validationResults.Count != 0)
+        {
+            var errors = validationResults.Select(v => new
+            {
+                Field = v.MemberNames.FirstOrDefault(),
+                Error = v.ErrorMessage
+            });
 
-        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName.ToLower());
+            throw new FieldValidationException("", errors);
+        }
         
-        if (!isProductValid) throw new FieldConflictException("Product name already exists");
+        var isProductNameExisting = await repository.CheckIfProductNameExists(product.Name!.ToLower());
+        if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
         
         var newProduct = Product.CreateFromInsertRequest(product);
         
@@ -43,7 +53,11 @@ public class ProductService(IProductRepository repository) : IProductService
         
         return newProduct.Id.ToString();
     }
+    
+    #endregion
 
+    #region Puts
+    
     public async Task<Product?> UpdateProductAsync(string id, ProductUpdateRequest product)
     {   
         var guid = Guid.Parse(id);
@@ -52,17 +66,26 @@ public class ProductService(IProductRepository repository) : IProductService
         
         if (p == null) throw new NotFoundException($"Product with id: {id} was not found");
         
-        var isProductValid = product
-            .WithValidName()
-            .WithPositivePrice()
-            .WithNonNegativeStockQuantity()
-            .Validate();
+        var validationResults = ProductValidation.ValidateProduct(product);
+
+        if (validationResults.Count != 0)
+        {
+            var errors = validationResults.Select(v => new
+            {
+                Field = v.MemberNames.FirstOrDefault(),
+                Error = v.ErrorMessage
+            });
+
+            throw new FieldValidationException("", errors);
+        }
+
+        if (product.Name is not null)
+        {
+            p.Name = product.Name;
+            var isProductNameExisting = await repository.CheckIfProductNameExists(p.LowerCaseProductName);
+            if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
+        }
         
-        if (!isProductValid) throw new FieldValidationException("Product's Fields are invalid");
-        
-        isProductValid = isProductValid && await repository.CheckIfProductNameExists(product.ProductName!.ToLower());
-        
-        if (!isProductValid) throw new FieldConflictException("Product name already exists");
         
         p.Update(product);
         
@@ -70,4 +93,6 @@ public class ProductService(IProductRepository repository) : IProductService
         
         return p;
     }
+    
+    #endregion
 }

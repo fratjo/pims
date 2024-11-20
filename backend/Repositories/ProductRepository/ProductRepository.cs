@@ -19,10 +19,10 @@ public class ProductRepository : IProductRepository
     {
         return await Task.FromResult(Products.FirstOrDefault(p => p.Id == id));
     }
-
-    public Task<bool> CheckIfProductNameExists(string name)
+    
+    public Task<bool> CheckIfProductNameExists(string newName)
     {
-        var product = Products.FirstOrDefault(p => p.LowerCaseProductName == name);
+        var product = Products.FirstOrDefault(p => p.LowerCaseProductName == newName);
         
         return Task.FromResult(product == null);
     }

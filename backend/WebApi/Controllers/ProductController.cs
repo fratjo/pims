@@ -10,7 +10,9 @@ namespace WebApi.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController(IProductService service, IEnumerable<IExceptionHandler> exceptionHandlers) : ControllerBase
+    public class ProductController(
+        IProductService service, 
+        IEnumerable<IExceptionHandler> exceptionHandlers) : ControllerBase
     {
         #region Gets
         
