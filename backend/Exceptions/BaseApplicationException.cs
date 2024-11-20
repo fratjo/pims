@@ -4,7 +4,8 @@ namespace Errors;
 
 public class BaseApplicationException : Exception
 {
-    public HttpStatusCode StatusCode { get; private set; }
+    public HttpStatusCode StatusCode { get; private set; } = HttpStatusCode.InternalServerError;
+    public object? Data { get; protected set; } = null;
 
     public BaseApplicationException(string? message, HttpStatusCode statusCode) : base(message)
     {
@@ -20,12 +21,14 @@ public class BaseApplicationException : Exception
 
 public class FieldValidationException : BaseApplicationException
 {
-    public FieldValidationException(string? message) : base(message, HttpStatusCode.BadRequest)
+    public FieldValidationException(string? message, object? data) : base(message, HttpStatusCode.BadRequest)
     {
+        this.Data = data;
     }
 
-    public FieldValidationException(string? message, Exception? innerException) : base(message, HttpStatusCode.BadRequest, innerException)
+    public FieldValidationException(string? message, object? data, Exception? innerException) : base(message, HttpStatusCode.BadRequest, innerException)
     {
+        this.Data = data;
     }
 }
 
