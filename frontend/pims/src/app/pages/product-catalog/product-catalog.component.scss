@@ -1,0 +1,18 @@
+div {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: calc(100vh - 48px);
+  .panels {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 100%;
+    .rigth-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}

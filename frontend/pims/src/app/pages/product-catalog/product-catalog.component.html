@@ -1,1 +1,11 @@
-<p>product-catalog works!</p>
+<div>
+  <div class="panels">
+    <div class="left-panel">
+      <app-product-filter></app-product-filter>
+      <app-product-list [products]="products$ | async"></app-product-list>
+    </div>
+    <div class="rigth-panel">
+      <app-product-preview></app-product-preview>
+    </div>
+  </div>
+</div>
