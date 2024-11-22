@@ -38,6 +38,17 @@ namespace WebApi.Controllers
                 return Ok(product);
             }, exceptionHandlers);
         }
+
+        [HttpGet("categories")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            return await this.HandleRequestAsync(async () =>
+            {
+                var categories = await service.GetCategoryNamesAsync();
+                return Ok(categories);
+            }, exceptionHandlers);
+        }
         
         #endregion
         
