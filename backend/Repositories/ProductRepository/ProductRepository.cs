@@ -6,8 +6,9 @@ namespace Repositories.ProductRepository;
 public class ProductRepository : IProductRepository
 {
     private List<Product> Products = [
-        new Product("Pomme", "Fruit", 1.00M, 10),
-        new Product("Poire", "Fruit", 1.50M, 5),
+        new Product("Pomme",  1.00M, 10, "Fruit"),
+        new Product("Poire", 1.50M, 5, "Fruit"),
+        new Product("Carotte", 0.50M, 1, "Légume"),
     ];
 
     public async Task<IEnumerable<Product>> GetProducts()
@@ -20,11 +21,16 @@ public class ProductRepository : IProductRepository
         return await Task.FromResult(Products.FirstOrDefault(p => p.Id == id));
     }
     
-    public Task<bool> CheckIfProductNameExists(string newName)
+    public async Task<bool> CheckIfProductNameExists(string newName)
     {
         var product = Products.FirstOrDefault(p => p.LowerCaseProductName == newName);
         
-        return Task.FromResult(product == null);
+        return await Task.FromResult(product == null);
+    }
+
+    public async Task<IEnumerable<string>> GetCategoryNames()
+    {
+        return await Task.FromResult<IEnumerable<string>>(Products.Select(p => p.Category).Distinct());
     }
 
     public async Task<bool> AddProduct(Product product)

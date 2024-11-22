@@ -24,6 +24,11 @@ public class ProductService(IProductRepository repository) : IProductService
         
         return product;
     }
+
+    public async Task<IEnumerable<string>> GetCategoryNamesAsync()
+    {
+        return await repository.GetCategoryNames();
+    }
     
     #endregion
 
