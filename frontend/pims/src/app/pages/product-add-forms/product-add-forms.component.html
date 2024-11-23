@@ -1,1 +1,41 @@
-<p>product-add-forms works!</p>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="name"> Name: </label>
+    <input type="text" formControlName="name" />
+    @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+    <p class="invalid">Name is required</p>
+    }
+  </div>
+  <div>
+    <label for="category">Category: </label>
+    <input type="text" formControlName="category" />
+    @if (productForm.get('category')?.invalid &&
+    productForm.get('category')?.touched) {
+    <p class="invalid">Category is required</p>
+    }
+  </div>
+  <div>
+    <label for="description">Description: </label>
+    <input type="text" formControlName="description" />
+  </div>
+  <div>
+    <label for="price">Price: </label>
+    <input type="number" formControlName="price" step="0.01" min="0.01" />
+    @if (productForm.get('price')?.invalid && productForm.get('price')?.touched)
+    {
+    <p class="invalid">Price is required</p>
+    }
+  </div>
+  <div>
+    <label for="stockQuantity">Stock Quantity: </label>
+    <input type="number" formControlName="stockQuantity" step="1" min="0" />
+    @if (productForm.get('stockQuantity')?.invalid &&
+    productForm.get('stockQuantity')?.touched) {
+    <p class="invalid">Stock Quantity is required</p>
+    }
+  </div>
+
+  <div>
+    <button [disabled]="productForm.invalid">Valider</button>
+  </div>
+</form>

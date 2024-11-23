@@ -8,7 +8,12 @@ import { Observable } from 'rxjs';
 import { Product } from '../../models/product.interface';
 import { AsyncPipe } from '@angular/common';
 import { FilterPipe } from '../../core/pipes/filter.pipe';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import {
+  provideRouter,
+  RouterLink,
+  RouterModule,
+  RouterOutlet,
+} from '@angular/router';
 
 @Component({
   selector: 'app-product-catalog',
@@ -21,6 +26,7 @@ import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
     RouterModule,
     RouterLink,
   ],
+  providers: [],
   templateUrl: './product-catalog.component.html',
   styleUrl: './product-catalog.component.scss',
 })

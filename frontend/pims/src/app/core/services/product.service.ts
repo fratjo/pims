@@ -14,6 +14,8 @@ export class ProductService {
   public currentProductPreview$: BehaviorSubject<Product> =
     new BehaviorSubject<Product>({});
 
+  // HTTP CALLS
+
   fetchProducts(): void {
     this.httpClient
       .get<Product[] | []>('http://localhost:5002/api/products')
@@ -26,7 +28,20 @@ export class ProductService {
       .subscribe();
   }
 
-  // NON HTTP CALL
+  postProduct(product: Product): void {
+    this.httpClient
+      .post<string>('http://localhost:5002/api/products', product)
+      .pipe(
+        tap((newId) => {
+          product.id = newId;
+          this.products$.next([...this.products$.value, product]);
+        })
+      )
+      .subscribe();
+  }
+
+  // NON HTTP CALLS
+
   setCurrentProduct(id: string): void {
     const products = this.products$.getValue();
     const selectedProduct = products.find((product) => product.id === id);

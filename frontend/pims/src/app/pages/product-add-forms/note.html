@@ -1,0 +1,29 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Price: </label>
+    <input
+      type="number"
+      formControlName="price"
+      step="0.01"
+      <!--
+      Autorise
+      les
+      décimales
+      --
+    />
+    min="0"
+    <!-- Empêche les valeurs négatives -->
+    placeholder="0.00" />
+    <div
+      *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+    >
+      <small *ngIf="productForm.get('price')?.hasError('required')">
+        Price is required.
+      </small>
+      <small *ngIf="productForm.get('price')?.hasError('min')">
+        Price must be positive.
+      </small>
+    </div>
+  </div>
+  <button type="submit" [disabled]="productForm.invalid">Submit</button>
+</form>
