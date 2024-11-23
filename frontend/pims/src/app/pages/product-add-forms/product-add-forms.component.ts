@@ -41,12 +41,20 @@ export class ProductAddFormsComponent implements OnInit {
       name: [product.name, Validators.required],
       category: [product.category, Validators.required],
       description: product.description,
-      price: [product.price, Validators.required, Validators.min(0.01)],
-      stock: [product.stockQuantity, Validators.required, Validators.min(0)],
+      price: [product.price, [Validators.required, Validators.min(0.01)]],
+      stockQuantity: [
+        product.stockQuantity,
+        [Validators.required, Validators.min(0)],
+      ],
     });
   }
 
   onSubmit(): void {
-    console.log(this.productForm.value);
+    if (this.productForm.valid) {
+      this.productService.postProduct(this.productForm.value);
+      this.router.navigate(['/catalog']);
+    } else {
+      console.log('Form invalid');
+    }
   }
 }
