@@ -1,1 +1,7 @@
-<app-product-card></app-product-card>
+<ul>
+  @for (product of products; track $index) {
+  <li (click)="onProductSelect(product.id!)">
+    <app-product-card [product]="product" />
+  </li>
+  }
+</ul>

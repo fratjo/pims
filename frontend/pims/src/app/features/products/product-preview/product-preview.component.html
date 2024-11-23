@@ -1,1 +1,3 @@
-<p>product-preview works!</p>
+@if (currentProductPreview$ | async; as product) {
+<p>{{ product.name }}</p>
+}
