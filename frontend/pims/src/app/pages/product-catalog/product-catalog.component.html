@@ -1,11 +1,15 @@
 <div>
   <div class="panels">
     <div class="left-panel">
-      <app-product-filter></app-product-filter>
-      <app-product-list [products]="products$ | async"></app-product-list>
+      <app-product-filter (searchResult)="onSearchResultChange($event)" />
+      <app-product-list
+        [products]="products$ | async | filter : search"
+        (productSelected)="onProductSelected($event)"
+      />
     </div>
     <div class="rigth-panel">
       <app-product-preview></app-product-preview>
+      <a class="add-button" [routerLink]="['/products/add']">+</a>
     </div>
   </div>
 </div>

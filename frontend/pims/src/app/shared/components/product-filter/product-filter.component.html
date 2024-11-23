@@ -1,1 +1,6 @@
-<p>product-filter works!</p>
+<input
+  type="text"
+  [(ngModel)]="search"
+  placeholder="Search for a product name"
+  (input)="onSearchChange()"
+/>

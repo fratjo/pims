@@ -8,10 +8,11 @@ import { Product } from '../../models/product.interface';
 })
 export class ProductService {
   private readonly httpClient = inject(HttpClient);
-
   public products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(
     []
   );
+  public currentProductPreview$: BehaviorSubject<Product> =
+    new BehaviorSubject<Product>({});
 
   fetchProducts(): void {
     this.httpClient
@@ -19,8 +20,18 @@ export class ProductService {
       .pipe(
         tap((products: Product[]) => {
           this.products$.next(products);
+          this.currentProductPreview$.next(products[0] ?? {});
         })
       )
       .subscribe();
+  }
+
+  // NON HTTP CALL
+  setCurrentProduct(id: string): void {
+    const products = this.products$.getValue();
+    const selectedProduct = products.find((product) => product.id === id);
+
+    if (selectedProduct) this.currentProductPreview$.next(selectedProduct);
+    else this.currentProductPreview$.next(products[0] ?? {});
   }
 }
