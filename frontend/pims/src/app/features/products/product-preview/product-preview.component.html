@@ -1,3 +1,18 @@
-@if (product) {
-<p>{{ product.name }}</p>
-}
+<div class="card">
+  @if (product) {
+  <div class="main">
+    <div class="info">
+      <p>{{ product.name }}</p>
+      <p>{{ product.category }}</p>
+    </div>
+    <div class="values">
+      <p>Price: {{ product.price }} €</p>
+      <p>Quantity: {{ product.stockQuantity }}</p>
+    </div>
+  </div>
+  <hr />
+  <div>
+    <small>{{ product.description }}</small>
+  </div>
+  }
+</div>

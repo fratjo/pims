@@ -1,7 +1,7 @@
 <div>
+  <app-product-filter (searchResult)="onSearchResultChange($event)" />
   <div class="panels">
     <div class="left-panel">
-      <app-product-filter (searchResult)="onSearchResultChange($event)" />
       <app-product-list
         [products]="products$ | async | filter : search"
         (productSelected)="onProductSelected($event)"
@@ -11,8 +11,8 @@
       <router-outlet></router-outlet>
     </div>
     <div class="action-buttons">
-      <a class="action-button" (click)="onProductEdit()">%</a>
-      <a class="action-button" [routerLink]="['/products/add']">+</a>
+      <a class="action-button" (click)="onProductEdit()">Editing</a>
+      <a class="action-button" (click)="onProductAdd()">Adding</a>
     </div>
   </div>
 </div>

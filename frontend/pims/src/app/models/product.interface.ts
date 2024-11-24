@@ -6,3 +6,7 @@ export interface Product {
   price?: number;
   stockQuantity?: number;
 }
+
+export interface ProductId {
+  id: string;
+}

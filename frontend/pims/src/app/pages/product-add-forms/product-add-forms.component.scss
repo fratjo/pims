@@ -1,0 +1,87 @@
+.invalid {
+  color: red;
+}
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.green {
+  background-color: green;
+  color: white;
+
+  &:disabled {
+    background-color: #ccc;
+    color: #fff;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+
+    div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      input {
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+
+  div.description {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    textarea {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+
+  div.buttons {
+    button {
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    label {
+      font-weight: bold;
+    }
+    input {
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+}

@@ -14,18 +14,18 @@ export const routes: Routes = [
     component: ProductCatalogComponent,
     children: [
       {
+        path: 'add',
+        component: ProductAddFormsComponent,
+      },
+      {
         path: ':id',
         component: ProductPreviewComponent,
       },
+      {
+        path: 'edit/:id',
+        component: ProductAddFormsComponent,
+      },
     ],
-  },
-  {
-    path: 'products/add',
-    component: ProductAddFormsComponent,
-  },
-  {
-    path: 'products/edit/:id',
-    component: ProductAddFormsComponent,
   },
   {
     path: '**',

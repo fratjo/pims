@@ -9,7 +9,8 @@ import {
 import { ProductService } from '../../core/services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.interface';
-import { first, tap } from 'rxjs';
+import { first } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-add-forms',
@@ -23,7 +24,8 @@ export class ProductAddFormsComponent implements OnInit {
   private productService = inject(ProductService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private action: string = 'Add';
+  private location = inject(Location);
+  public action: string = 'Add';
   private product: Product | null = null;
 
   public productForm: FormGroup = this.initForm();
@@ -77,21 +79,43 @@ export class ProductAddFormsComponent implements OnInit {
     });
   }
 
+  goBack(): void {
+    this.location.back();
+  }
+
   onSubmit(): void {
     if (this.productForm.valid) {
       if (this.action === 'Add') {
-        this.productService.postProduct(this.productForm.value);
-        this.router.navigate(['/catalog']);
+        this.productService.postProduct(this.productForm.value).subscribe({
+          next: (id) => {
+            this.router.navigate(['/catalog', id.id]);
+          },
+          error: (err: any) => {
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = err.error.message;
+            errorMessage.style.color = 'red';
+            const formElement = document.querySelector('form');
+            formElement?.appendChild(errorMessage);
+          },
+        });
       }
       if (this.action === 'Edit') {
-        this.productService.putProduct({
-          ...this.productForm.value,
-          id: this.product?.id,
-        });
-        this.router.navigate(['/catalog']);
+        this.productService
+          .putProduct({
+            ...this.productForm.value,
+            id: this.product?.id,
+          })
+          .subscribe({
+            next: (product) => this.router.navigate(['/catalog', product.id]),
+            error: (err) => {
+              const errorMessage = document.createElement('div');
+              errorMessage.innerText = err.error.message;
+              errorMessage.style.color = 'red';
+              const formElement = document.querySelector('form');
+              formElement?.appendChild(errorMessage);
+            },
+          });
       }
-    } else {
-      console.log('Form invalid');
     }
   }
 }
