@@ -8,8 +8,8 @@
       />
     </div>
     <div class="rigth-panel">
-      <app-product-preview></app-product-preview>
-      <a class="add-button" [routerLink]="['/products/add']">+</a>
+      <router-outlet></router-outlet>
     </div>
+    <a class="add-button" [routerLink]="['/products/add']">+</a>
   </div>
 </div>

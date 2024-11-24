@@ -12,6 +12,12 @@ export const routes: Routes = [
   {
     path: 'catalog',
     component: ProductCatalogComponent,
+    children: [
+      {
+        path: ':id',
+        component: ProductPreviewComponent,
+      },
+    ],
   },
   {
     path: 'products/add',

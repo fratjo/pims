@@ -9,7 +9,8 @@ import { Product } from '../../models/product.interface';
 import { AsyncPipe } from '@angular/common';
 import { FilterPipe } from '../../core/pipes/filter.pipe';
 import {
-  provideRouter,
+  ActivatedRoute,
+  Router,
   RouterLink,
   RouterModule,
   RouterOutlet,
@@ -20,7 +21,6 @@ import {
   imports: [
     ProductListComponent,
     ProductFilterComponent,
-    ProductPreviewComponent,
     AsyncPipe,
     FilterPipe,
     RouterModule,
@@ -32,15 +32,23 @@ import {
 })
 export class ProductCatalogComponent implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   products$: Observable<Product[]> = this.productService.products$;
   public search: string = '';
 
   ngOnInit(): void {
     this.productService.fetchProducts();
+    this.products$.subscribe((products) => {
+      if (products.length > 0) {
+        this.router.navigate([products[0].id], { relativeTo: this.route });
+      }
+    });
   }
 
   onProductSelected(id: string): void {
-    this.productService.setCurrentProduct(id);
+    this.router.navigate([id], { relativeTo: this.route });
+    console.log(this.router.routerState.snapshot.url);
   }
 
   onSearchResultChange(value: string): void {
