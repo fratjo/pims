@@ -84,10 +84,9 @@ public class ProductService(IProductRepository repository) : IProductService
             throw new FieldValidationException("", errors);
         }
 
-        if (product.Name is not null)
+        if (product.Name is not null && p.Name != product.Name)
         {
-            p.Name = product.Name;
-            var isProductNameExisting = await repository.CheckIfProductNameExists(p.LowerCaseProductName);
+            var isProductNameExisting = await repository.CheckIfProductNameExists(product.Name.ToLower());
             if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
         }
         

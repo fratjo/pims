@@ -54,6 +54,7 @@ namespace WebApi.Controllers
         
         #region Posts
 
+        // api/products
         [HttpPost("")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,7 +64,7 @@ namespace WebApi.Controllers
             return await this.HandleRequestAsync(async () =>
             {
                 var newId = await service.CreateProductAsync(product);
-                return CreatedAtAction(nameof(GetProductById), new { id = newId }, newId);
+                return CreatedAtAction(nameof(GetProductById), new { id = newId }, new { id = newId });
             }, exceptionHandlers);
         }
         

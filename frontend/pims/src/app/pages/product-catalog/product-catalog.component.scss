@@ -26,16 +26,25 @@ div {
   }
 }
 
-.add-button {
+.action-buttons {
   position: absolute;
-  background-color: purple;
-  height: 30px;
-  width: 30px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 10px;
   bottom: 10px;
   right: 10px;
-  cursor: pointer;
+
+  .action-button {
+    background-color: purple;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
 }
