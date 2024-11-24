@@ -72,7 +72,7 @@ public class FieldConflictExceptionHandler : IExceptionHandler
     public IActionResult HandleException(Exception exception, ControllerBase controller)
     {
         var fieldConflictException = exception as FieldConflictException;
-        return controller.BadRequest(new { message = fieldConflictException!.Message });
+        return controller.Conflict(new { message = fieldConflictException!.Message });
     }
 }
 
