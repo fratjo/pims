@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Product } from '../../models/product.interface';
+import { Product, ProductId } from '../../models/product.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,28 +29,32 @@ export class ProductService {
     );
   }
 
-  postProduct(product: Product): void {
-    this.httpClient
-      .post<string>('http://localhost:5002/api/products', product)
+  postProduct(product: Product): Observable<ProductId> {
+    return this.httpClient
+      .post<ProductId>('http://localhost:5002/api/products', product)
       .pipe(
         tap((newId) => {
-          product.id = newId;
+          product.id = newId.id;
+          product.name =
+            product.name!.charAt(0).toUpperCase() +
+            product.name!.slice(1).toLowerCase();
+          product.category =
+            product.category!.charAt(0).toUpperCase() +
+            product.category!.slice(1).toLowerCase();
           this.products$.next([...this.products$.value, product]);
         })
-      )
-      .subscribe();
+      );
   }
 
-  putProduct(product: Product): void {
-    this.httpClient
-      .put(`http://localhost:5002/api/products/${product.id}`, product)
+  putProduct(product: Product): Observable<Product> {
+    return this.httpClient
+      .put<Product>(`http://localhost:5002/api/products/${product.id}`, product)
       .pipe(
-        tap(() => {
+        tap((product) => {
           this.products$.next(
             this.products$.value.map((p) => (p.id === product.id ? product : p)) // Update the product in the list
           );
         })
-      )
-      .subscribe();
+      );
   }
 }

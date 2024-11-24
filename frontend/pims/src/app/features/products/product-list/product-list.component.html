@@ -1,6 +1,6 @@
 <ul>
   @for (product of products; track $index) {
-  <li (click)="onProductSelect(product.id!)">
+  <li [routerLink]="[product.id!]" routerLinkActive="active" class="active">
     <app-product-card [product]="product" />
   </li>
   }

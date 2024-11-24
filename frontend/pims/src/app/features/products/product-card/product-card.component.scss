@@ -1,0 +1,23 @@
+.card {
+  width: 100%;
+  flex: 1 1 300px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  align-items: stretch;
+  justify-content: stretch;
+
+  .info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: end;
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+}

@@ -1,20 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ProductListComponent } from '../../features/products/product-list/product-list.component';
-import { ProductCardComponent } from '../../features/products/product-card/product-card.component';
 import { ProductFilterComponent } from '../../shared/components/product-filter/product-filter.component';
-import { ProductPreviewComponent } from '../../features/products/product-preview/product-preview.component';
 import { ProductService } from '../../core/services/product.service';
 import { Observable } from 'rxjs';
 import { Product } from '../../models/product.interface';
 import { AsyncPipe } from '@angular/common';
 import { FilterPipe } from '../../core/pipes/filter.pipe';
-import {
-  ActivatedRoute,
-  Router,
-  RouterLink,
-  RouterModule,
-  RouterOutlet,
-} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-catalog',
@@ -24,7 +16,6 @@ import {
     AsyncPipe,
     FilterPipe,
     RouterModule,
-    RouterLink,
   ],
   providers: [],
   templateUrl: './product-catalog.component.html',
@@ -39,11 +30,6 @@ export class ProductCatalogComponent implements OnInit {
 
   ngOnInit(): void {
     this.productService.fetchProducts();
-    this.products$.subscribe((products) => {
-      if (products.length > 0) {
-        this.router.navigate([products[0].id], { relativeTo: this.route });
-      }
-    });
   }
 
   onProductSelected(id: string): void {
@@ -53,7 +39,11 @@ export class ProductCatalogComponent implements OnInit {
   onProductEdit(): void {
     const currentUrl = this.router.routerState.snapshot.url;
     const currentId = currentUrl.split('/').pop();
-    this.router.navigate(['/products', 'edit', currentId]);
+    this.router.navigate(['edit', currentId], { relativeTo: this.route });
+  }
+
+  onProductAdd(): void {
+    this.router.navigate(['add'], { relativeTo: this.route });
   }
 
   onSearchResultChange(value: string): void {
