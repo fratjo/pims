@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using Errors;
 using Models;
 using Repositories.ProductRepository;
@@ -52,6 +53,9 @@ public class ProductService(IProductRepository repository) : IProductService
         var isProductNameExisting = await repository.CheckIfProductNameExists(product.Name!.ToLower());
         if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
         
+        product.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Name);
+        product.Category = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Category);
+        
         var newProduct = Product.CreateFromInsertRequest(product);
         
         await repository.AddProduct(newProduct);
@@ -90,6 +94,8 @@ public class ProductService(IProductRepository repository) : IProductService
             if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
         }
         
+        product.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Name);
+        product.Category = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Category);
         
         p.Update(product);
         
