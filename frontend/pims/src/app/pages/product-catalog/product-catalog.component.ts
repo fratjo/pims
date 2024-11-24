@@ -48,7 +48,12 @@ export class ProductCatalogComponent implements OnInit {
 
   onProductSelected(id: string): void {
     this.router.navigate([id], { relativeTo: this.route });
-    console.log(this.router.routerState.snapshot.url);
+  }
+
+  onProductEdit(): void {
+    const currentUrl = this.router.routerState.snapshot.url;
+    const currentId = currentUrl.split('/').pop();
+    this.router.navigate(['/products', 'edit', currentId]);
   }
 
   onSearchResultChange(value: string): void {

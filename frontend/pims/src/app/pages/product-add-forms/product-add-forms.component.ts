@@ -7,8 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { ProductService } from '../../core/services/product.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.interface';
+import { first, tap } from 'rxjs';
 
 @Component({
   selector: 'app-product-add-forms',
@@ -21,15 +22,32 @@ export class ProductAddFormsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private action: string = 'Add';
+  private product: Product | null = null;
 
-  public productForm!: FormGroup;
+  public productForm: FormGroup = this.initForm();
 
   ngOnInit(): void {
-    this.productForm = this.initForm();
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id !== null) {
+        this.action = 'Edit';
+        this.productService
+          .fetchProductById(id)
+          .pipe(first((p) => !!p))
+          .subscribe((product) => {
+            this.productForm = this.initForm(product);
+          });
+      } else {
+        this.productForm = this.initForm();
+      }
+    });
   }
 
   private initForm(
     product: Product = {
+      id: '',
       name: '',
       description: '',
       category: '',
@@ -37,22 +55,41 @@ export class ProductAddFormsComponent implements OnInit {
       stockQuantity: 0,
     }
   ): FormGroup {
+    this.product = product.id ? product : null;
+
     return this.fb.group({
-      name: [product.name, Validators.required],
-      category: [product.category, Validators.required],
+      name: [product.name, this.action === 'Edit' ? [] : Validators.required],
+      category: [
+        product.category,
+        this.action === 'Edit' ? [] : Validators.required,
+      ],
       description: product.description,
-      price: [product.price, [Validators.required, Validators.min(0.01)]],
+      price: [
+        product.price,
+        this.action === 'Edit'
+          ? []
+          : [Validators.required, Validators.min(0.01)],
+      ],
       stockQuantity: [
         product.stockQuantity,
-        [Validators.required, Validators.min(0)],
+        this.action === 'Edit' ? [] : [Validators.required, Validators.min(0)],
       ],
     });
   }
 
   onSubmit(): void {
     if (this.productForm.valid) {
-      this.productService.postProduct(this.productForm.value);
-      this.router.navigate(['/catalog']);
+      if (this.action === 'Add') {
+        this.productService.postProduct(this.productForm.value);
+        this.router.navigate(['/catalog']);
+      }
+      if (this.action === 'Edit') {
+        this.productService.putProduct({
+          ...this.productForm.value,
+          id: this.product?.id,
+        });
+        this.router.navigate(['/catalog']);
+      }
     } else {
       console.log('Form invalid');
     }

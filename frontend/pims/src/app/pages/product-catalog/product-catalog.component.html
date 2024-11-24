@@ -10,6 +10,9 @@
     <div class="rigth-panel">
       <router-outlet></router-outlet>
     </div>
-    <a class="add-button" [routerLink]="['/products/add']">+</a>
+    <div class="action-buttons">
+      <a class="action-button" (click)="onProductEdit()">%</a>
+      <a class="action-button" [routerLink]="['/products/add']">+</a>
+    </div>
   </div>
 </div>

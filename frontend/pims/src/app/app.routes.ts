@@ -24,6 +24,10 @@ export const routes: Routes = [
     component: ProductAddFormsComponent,
   },
   {
+    path: 'products/edit/:id',
+    component: ProductAddFormsComponent,
+  },
+  {
     path: '**',
     redirectTo: 'catalog',
   },
