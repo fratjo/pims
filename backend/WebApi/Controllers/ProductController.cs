@@ -38,6 +38,29 @@ namespace WebApi.Controllers
                 return Ok(product);
             }, exceptionHandlers);
         }
+        
+        [HttpGet("api/bundles")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllBundles()
+        {
+            return await this.HandleRequestAsync(async () =>
+            {
+                var bundles = await service.GetAllBundlesAsync();
+                return Ok(bundles);
+            }, exceptionHandlers);
+        }
+        
+        [HttpGet("api/bundles/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBundleById(string id)
+        {
+            return await this.HandleRequestAsync(async () =>
+            {
+                var bundle = await service.GetBundleByIdAsync(id);
+                return Ok(bundle);
+            }, exceptionHandlers);
+        }
 
         [HttpGet("categories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,6 +88,19 @@ namespace WebApi.Controllers
             {
                 var newId = await service.CreateProductAsync(product);
                 return CreatedAtAction(nameof(GetProductById), new { id = newId }, new { id = newId });
+            }, exceptionHandlers);
+        }
+        
+        [HttpPost("api/bundles")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> CreateBundle([FromBody] BundleInsertRequest bundle)
+        {
+            return await this.HandleRequestAsync(async () =>
+            {
+                var bundleId = await service.CreateProductBundleAsync(bundle);
+                return CreatedAtAction(nameof(GetBundleById), new { id = bundleId }, new { id = bundleId });
             }, exceptionHandlers);
         }
         

@@ -26,6 +26,22 @@ public class ProductService(IProductRepository repository) : IProductService
         return product;
     }
 
+    public async Task<IEnumerable<Bundle>> GetAllBundlesAsync()
+    {
+        return await repository.GetBundles();
+    }
+
+    public async Task<Bundle?> GetBundleByIdAsync(string id)
+    {
+        Guid bundleId = Guid.Parse(id);
+        
+        Bundle? bundle = await repository.GetBundleById(bundleId);
+        
+        if (bundle is null) throw new NotFoundException($"Bundle with id: {id} was not found");
+        
+        return bundle;
+    }
+
     public async Task<IEnumerable<string>> GetCategoryNamesAsync()
     {
         return await repository.GetCategoryNames();
@@ -54,13 +70,67 @@ public class ProductService(IProductRepository repository) : IProductService
         if (!isProductNameExisting) throw new FieldConflictException("Product name already exists");
         
         product.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Name);
-        product.Category = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Category);
+        product.Category = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.Category!);
         
         var newProduct = Product.CreateFromInsertRequest(product);
         
         await repository.AddProduct(newProduct);
         
         return newProduct.Id.ToString();
+    }
+    
+    public async Task<string> CreateProductBundleAsync(BundleInsertRequest bundle)
+    {
+        var validationResults = BundleValidation.ValidateBundle(bundle);
+
+        if (validationResults.Count != 0)
+        {
+            var errors = validationResults.Select(v => new
+            {
+                Field = v.MemberNames.FirstOrDefault(),
+                Error = v.ErrorMessage
+            });
+
+            throw new FieldValidationException("", errors);
+        }
+        
+        // check if products exist
+        var totalPrice = 0.0;
+        foreach (var bundleProduct in bundle.Products!)
+        {
+            var productById = await repository.GetProductById(bundleProduct);
+            if (productById is null)
+            {
+                throw new NotFoundException("Product not found with id: " + bundleProduct);
+            }
+
+            if (productById.StockQuantity <= 0)
+            {
+                throw new OutOfStockException($"Product {productById.Name} is out of stock");
+            }
+            
+            totalPrice += (double) productById.Price!;
+        }
+        
+        // check price
+        if (totalPrice * 0.6 > (double) bundle.Price!)
+        {
+            throw new BaseApplicationException("Bundle price must be at least 60% of the total price of the products");
+        }
+        
+        if (totalPrice * 0.95 < (double) bundle.Price!)
+        {
+            throw new BaseApplicationException("Bundle price must be at most 95% of the total price of the products");
+        }
+        
+        
+        bundle.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bundle.Name!);
+        
+        var newBundle = Bundle.CreateFromInsertRequest(bundle);
+        
+        await repository.AddBundle(newBundle);
+        
+        return newBundle.Id.ToString();
     }
     
     #endregion

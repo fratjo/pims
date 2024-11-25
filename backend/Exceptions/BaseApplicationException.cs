@@ -4,9 +4,13 @@ namespace Errors;
 
 public class BaseApplicationException : Exception
 {
-    public HttpStatusCode StatusCode { get; private set; } = HttpStatusCode.InternalServerError;
-    public object? Data { get; protected set; } = null;
-
+    public HttpStatusCode StatusCode { get; private set; }
+    public new object? Data { get; protected set; } = null;
+    
+    public BaseApplicationException(string? message) : base(message)
+    {
+        StatusCode = HttpStatusCode.BadRequest;
+    }
     public BaseApplicationException(string? message, HttpStatusCode statusCode) : base(message)
     {
         StatusCode = statusCode;
@@ -50,6 +54,17 @@ public class NotFoundException : BaseApplicationException
     }
 
     public NotFoundException(string? message, Exception? innerException) : base(message, HttpStatusCode.NotFound, innerException)
+    {
+    }
+}
+
+public class OutOfStockException : BaseApplicationException
+{
+    public OutOfStockException(string? message) : base(message, HttpStatusCode.BadRequest)
+    {
+    }
+
+    public OutOfStockException(string? message, Exception? innerException) : base(message, HttpStatusCode.BadRequest, innerException)
     {
     }
 }
