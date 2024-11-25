@@ -5,11 +5,38 @@ namespace Repositories.ProductRepository;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly List<Product> _products = [
-        new Product("Pomme",  1.00M, 10, "Fruit"),
-        new Product("Poire", 1.50M, 5, "Fruit"),
-        new Product("Carotte", 0.50M, 1, "Légume"),
-    ];
+    public ProductRepository()
+    {
+        var p1 = new Product("Wireless Mouse", 25.00M, 100, "Mouse", "Ergonomic wireless mouse");
+        var p2 = new Product("Mouse Pad", 10.00M, 150, "Mouse", "Smooth mouse pad");
+        var p3 = new Product("Mechanical Keyboard", 70.00M, 80, "Mouse", "RGB mechanical keyboard");
+        var p4 = new Product("USB-C Hub", 40.00M, 50, "Mouse", "Multi-port USB-C hub");
+        var p5 = new Product("Laptop Stand", 30.00M, 75, "Mouse", "Adjustable laptop stand");
+        var p6 = new Product("Web Camera", 50.00M, 60, "Mouse", "HD web camera for streaming");
+        var p7 = new Product("Headphones", 80.00M, 40, "Mouse", "Noise-canceling head phones");
+        var p8 = new Product("HDMI Cable", 5.00M, 300, "Mouse", "6-foot HDMI cable");
+        var p9 = new Product("Wireless Charger", 20.00M, 90, "Mouse", "Fast wireless charger");
+        
+        _products.Add(p1);
+        _products.Add(p2);
+        _products.Add(p3);
+        _products.Add(p4);
+        _products.Add(p5);
+        _products.Add(p6);
+        _products.Add(p7);
+        _products.Add(p8);
+        _products.Add(p9);
+        
+        var b1 = new Bundle("Productivity Bundle", "Includes a Wireless Mouse and Mouse Pad for an optimal workspace.", 30.00M, new List<Guid> { p1.Id, p2.Id });
+        var b2 = new Bundle("Streaming Setup", "Includes a Web Camera and Headphones for the perfect streaming experience.", 100.00M, new List<Guid> { p6.Id, p7.Id });
+        var b3 = new Bundle("Complete Laptop Kit", "Includes a Laptop Stand, USB-C Hub, and Wireless Charger to enhance your laptop experience.", 70.00M, new List<Guid> { p5.Id, p4.Id, p9.Id });
+        
+        _bundles.Add(b1);
+        _bundles.Add(b2);
+        _bundles.Add(b3);
+    }
+    
+    private readonly List<Product> _products = [];
     
     private readonly List<Bundle> _bundles = [];
 

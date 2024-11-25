@@ -49,3 +49,17 @@ public record BundleInsertRequest : IBundle
     [MinLength(2, ErrorMessage = "A bundle must contain at least 2 products")]
     public IEnumerable<Guid>? Products { get; set; }
 }
+
+public class BundleResponse(
+    Guid bundleId,
+    string? bundleName,
+    string? bundleDescription,
+    decimal? bundlePrice,
+    IEnumerable<Product>? bundleProducts)
+{
+    public Guid Id { get; set; } = bundleId;
+    public string? Name { get; set; } = bundleName;
+    public string? Description { get; set; } = bundleDescription;
+    public decimal? Price { get; set; } = bundlePrice;
+    public IEnumerable<Product>? Products { get; set; } = bundleProducts;
+}
