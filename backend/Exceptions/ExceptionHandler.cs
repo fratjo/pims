@@ -16,6 +16,7 @@ public static class ExceptionHandlerServiceExtensions
         services.AddSingleton<IExceptionHandler, NotFoundExceptionHandler>();
         services.AddSingleton<IExceptionHandler, FieldValidationExceptionHandler>();
         services.AddSingleton<IExceptionHandler, FieldConflictExceptionHandler>();
+        services.AddSingleton<IExceptionHandler, OutOfStockExceptionHandler>();
         services.AddSingleton<IExceptionHandler, BaseApplicationExceptionHandler>();
         services.AddSingleton<IExceptionHandler, GeneralExceptionHandler>();
     }
@@ -87,5 +88,19 @@ public class NotFoundExceptionHandler : IExceptionHandler
     {
         var notFoundException = exception as NotFoundException;
         return controller.NotFound(new { message = notFoundException!.Message });
+    }
+}
+
+public class OutOfStockExceptionHandler : IExceptionHandler
+{
+    public bool CanHandleException(Exception exception)
+    {
+        return exception is OutOfStockException;
+    }
+
+    public IActionResult HandleException(Exception exception, ControllerBase controller)
+    {
+        var outOfStockException = exception as OutOfStockException;
+        return controller.BadRequest(new { message = outOfStockException!.Message });
     }
 }
