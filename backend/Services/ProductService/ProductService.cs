@@ -26,20 +26,57 @@ public class ProductService(IProductRepository repository) : IProductService
         return product;
     }
 
-    public async Task<IEnumerable<Bundle>> GetAllBundlesAsync()
+    public async Task<IEnumerable<BundleResponse>> GetAllBundlesAsync()
     {
-        return await repository.GetBundles();
+        var bundles = await repository.GetBundles();
+        var responses = new List<BundleResponse>();
+        
+        foreach (var bundle in bundles)
+        {
+            var products = new List<Product>();
+            foreach (var productId in bundle.Products!)
+            {
+                var product = await repository.GetProductById(productId);
+                if (product is not null)
+                {
+                    products.Add(product);
+                }
+            }
+            responses.Add(
+                new BundleResponse(
+                    bundle.Id, 
+                    bundle.Name, 
+                    bundle.Description, 
+                    bundle.Price, 
+                    products));
+        }
+        return responses;
     }
 
-    public async Task<Bundle?> GetBundleByIdAsync(string id)
+    public async Task<BundleResponse?> GetBundleByIdAsync(string id)
     {
-        Guid bundleId = Guid.Parse(id);
+        var bundleId = Guid.Parse(id);
         
-        Bundle? bundle = await repository.GetBundleById(bundleId);
+        var bundle = await repository.GetBundleById(bundleId);
         
         if (bundle is null) throw new NotFoundException($"Bundle with id: {id} was not found");
         
-        return bundle;
+        var products = new List<Product>();
+        foreach (var productId in bundle.Products!)
+        {
+            var product = await repository.GetProductById(productId);
+            if (product is not null)
+            {
+                products.Add(product);
+            }
+        }
+        
+        return new BundleResponse(
+            bundle.Id, 
+            bundle.Name, 
+            bundle.Description, 
+            bundle.Price, 
+            products);
     }
 
     public async Task<IEnumerable<string>> GetCategoryNamesAsync()
