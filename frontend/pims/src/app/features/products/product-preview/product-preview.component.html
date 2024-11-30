@@ -1,23 +1,51 @@
-<div class="card">
-  @if (product$ | async; as product) {
-  <div class="main">
-    <div class="info">
-      <p>{{ product.name }}</p>
-      <p>{{ product.category }}</p>
+<div class="preview-container">
+  <div class="card">
+    @if (product$ | async; as product) {
+    <div class="main">
+      <div class="info">
+        <p>{{ product.name }}</p>
+        <p>{{ product.category }}</p>
+      </div>
+      <div class="values">
+        <p>Price: {{ product.price }} €</p>
+        <p>Quantity: {{ product.stockQuantity }}</p>
+      </div>
     </div>
-    <div class="values">
-      <p>Price: {{ product.price }} €</p>
-      <p>Quantity: {{ product.stockQuantity }}</p>
+    <hr />
+    <div>
+      <small>{{ product.description }}</small>
     </div>
+    }
   </div>
-  <hr />
   <div>
-    <small>{{ product.description }}</small>
+    <!-- Cannot use @if (bundles$ | async as bundles) ?? -->
+    @if (bundles$ | async; as bundles) { @for (bundle of bundles; track $index)
+    {
+    <details class="bundle-card">
+      <summary>Bundle {{ bundle.name }}</summary>
+      <ul>
+        <li>Description : {{ bundle.description }}</li>
+        <li>Price: {{ bundle.price }} €</li>
+        <li>
+          Discount:
+          {{
+            (
+              ((bundle.reelValuePrice! - bundle.price!) /
+                bundle.reelValuePrice!) *
+              100
+            ).toFixed(0)
+          }}%
+        </li>
+        <li>Compostion :</li>
+        <ul>
+          @for (product of bundle.products; track $index) {
+          <li>
+            <a [routerLink]="['/catalog', product.id]">{{ product.name }}</a>
+          </li>
+          }
+        </ul>
+      </ul>
+    </details>
+    } }
   </div>
-  }
 </div>
-
-<!-- Cannot use @if (bundles$ | async as bundles) ?? -->
-@if (bundles$ | async; as bundles) { @for (bundle of bundles; track $index) {
-<p>{{ bundle.name }}</p>
-} }

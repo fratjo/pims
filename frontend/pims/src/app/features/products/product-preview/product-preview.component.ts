@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
 import { Bundles, Product } from '../../../models/product.interface';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-product-preview',
-  imports: [AsyncPipe, NgIf],
+  imports: [AsyncPipe, NgIf, RouterLink],
   templateUrl: './product-preview.component.html',
   styleUrl: './product-preview.component.scss',
 })

@@ -27,9 +27,9 @@ public class ProductRepository : IProductRepository
         _products.Add(p8);
         _products.Add(p9);
         
-        var b1 = new Bundle("Productivity Bundle", "Includes a Wireless Mouse and Mouse Pad for an optimal workspace.", 30.00M, new List<Guid> { p1.Id, p2.Id });
-        var b2 = new Bundle("Streaming Setup", "Includes a Web Camera and Headphones for the perfect streaming experience.", 100.00M, new List<Guid> { p6.Id, p7.Id });
-        var b3 = new Bundle("Complete Laptop Kit", "Includes a Laptop Stand, USB-C Hub, and Wireless Charger to enhance your laptop experience.", 70.00M, new List<Guid> { p5.Id, p4.Id, p9.Id });
+        var b1 = new Bundle("Productivity Bundle", "Includes a Wireless Mouse and Mouse Pad for an optimal workspace.", 30.00M, 35.00M,new List<Guid> { p1.Id, p2.Id });
+        var b2 = new Bundle("Streaming Setup", "Includes a Web Camera and Headphones for the perfect streaming experience.", 100.00M, 130.00M,new List<Guid> { p6.Id, p7.Id });
+        var b3 = new Bundle("Complete Laptop Kit", "Includes a Laptop Stand, USB-C Hub, and Wireless Charger to enhance your laptop experience.", 70.00M,90.00M, new List<Guid> { p5.Id, p4.Id, p9.Id });
         
         _bundles.Add(b1);
         _bundles.Add(b2);

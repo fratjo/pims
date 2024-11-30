@@ -14,20 +14,23 @@ public class Bundle(
     string? bundleName, 
     string? bundleDescription, 
     decimal? bundlePrice,
+    decimal? bundleReelValuePrice,
     IEnumerable<Guid>? bundleProducts) : IBundle
 {
     public Guid Id { get; set; } = Guid.NewGuid(); // Unique identifier for the bundle, assigned by the system when created
     public string? Name { get; set; } = bundleName;
     public string? Description { get; set; } = bundleDescription;
     public decimal? Price { get; set; } = bundlePrice;
+    public decimal? ReelValuePrice { get; set; } = bundleReelValuePrice;
     public IEnumerable<Guid>? Products { get; set; } = bundleProducts;
     
-    public static Bundle CreateFromInsertRequest(BundleInsertRequest insertRequest)
+    public static Bundle CreateFromInsertRequest(BundleInsertRequest insertRequest, decimal bundleReelValuePrice)
     {
         var newBundle = new Bundle(
             insertRequest.Name,
             insertRequest.Description,
             insertRequest.Price,
+            bundleReelValuePrice,
             insertRequest.Products
         );  
         
@@ -55,11 +58,13 @@ public class BundleResponse(
     string? bundleName,
     string? bundleDescription,
     decimal? bundlePrice,
+    decimal? bundleReelValuePrice,
     IEnumerable<Product>? bundleProducts)
 {
     public Guid Id { get; set; } = bundleId;
     public string? Name { get; set; } = bundleName;
     public string? Description { get; set; } = bundleDescription;
     public decimal? Price { get; set; } = bundlePrice;
+    public decimal? ReelValuePrice { get; set; } = bundleReelValuePrice;
     public IEnumerable<Product>? Products { get; set; } = bundleProducts;
 }

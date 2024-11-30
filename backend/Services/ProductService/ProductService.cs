@@ -48,6 +48,7 @@ public class ProductService(IProductRepository repository) : IProductService
                     bundle.Name, 
                     bundle.Description, 
                     bundle.Price, 
+                    bundle.ReelValuePrice,
                     products));
         }
         return responses;
@@ -78,6 +79,7 @@ public class ProductService(IProductRepository repository) : IProductService
                     bundle.Name, 
                     bundle.Description, 
                     bundle.Price, 
+                    bundle.ReelValuePrice,
                     products));
         }
         
@@ -107,6 +109,7 @@ public class ProductService(IProductRepository repository) : IProductService
             bundle.Name, 
             bundle.Description, 
             bundle.Price, 
+            bundle.ReelValuePrice,
             products);
     }
 
@@ -190,11 +193,12 @@ public class ProductService(IProductRepository repository) : IProductService
         {
             throw new BaseApplicationException("Bundle price must be at most 95% of the total price of the products");
         }
-        
+
+        var reelValuePrice = (decimal) totalPrice;
         
         bundle.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bundle.Name!);
         
-        var newBundle = Bundle.CreateFromInsertRequest(bundle);
+        var newBundle = Bundle.CreateFromInsertRequest(bundle, reelValuePrice);
         
         await repository.AddBundle(newBundle);
         

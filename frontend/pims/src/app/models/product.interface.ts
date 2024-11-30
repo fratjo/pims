@@ -17,6 +17,7 @@ export interface Bundle {
   name?: string;
   description?: string;
   price?: number;
+  reelValuePrice?: number;
   products?: Products;
 }
 export type Bundles = Bundle[];
