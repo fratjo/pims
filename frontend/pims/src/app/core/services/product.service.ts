@@ -1,14 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Product, ProductId } from '../../models/product.interface';
+import {
+  Bundles,
+  Product,
+  ProductId,
+  Products,
+} from '../../models/product.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   private readonly httpClient = inject(HttpClient);
-  public products$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>(
+  public products$: BehaviorSubject<Products> = new BehaviorSubject<Products>(
     []
   );
 
@@ -26,6 +31,12 @@ export class ProductService {
   fetchProductById(id: string): Observable<Product> {
     return this.httpClient.get<Product>(
       `http://localhost:5002/api/products/${id}`
+    );
+  }
+
+  fetchProductBundles(id: string): Observable<Bundles> {
+    return this.httpClient.get<Bundles>(
+      `http://localhost:5002/api/products/${id}/bundles`
     );
   }
 

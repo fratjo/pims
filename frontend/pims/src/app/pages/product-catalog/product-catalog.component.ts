@@ -3,7 +3,7 @@ import { ProductListComponent } from '../../features/products/product-list/produ
 import { ProductFilterComponent } from '../../shared/components/product-filter/product-filter.component';
 import { ProductService } from '../../core/services/product.service';
 import { Observable } from 'rxjs';
-import { Product } from '../../models/product.interface';
+import { Bundles, Product, Products } from '../../models/product.interface';
 import { AsyncPipe } from '@angular/common';
 import { FilterPipe } from '../../core/pipes/filter.pipe';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ export class ProductCatalogComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  products$: Observable<Product[]> = this.productService.products$;
+  products$: Observable<Products | Bundles> = this.productService.products$;
   public search: string = '';
 
   ngOnInit(): void {

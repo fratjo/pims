@@ -1,5 +1,5 @@
 <div class="card">
-  @if (product) {
+  @if (product$ | async; as product) {
   <div class="main">
     <div class="info">
       <p>{{ product.name }}</p>
@@ -16,3 +16,8 @@
   </div>
   }
 </div>
+
+<!-- Cannot use @if (bundles$ | async as bundles) ?? -->
+@if (bundles$ | async; as bundles) { @for (bundle of bundles; track $index) {
+<p>{{ bundle.name }}</p>
+} }
