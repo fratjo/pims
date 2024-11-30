@@ -1,0 +1,24 @@
+<details class="bundle-card">
+  <summary>Bundle {{ bundle.name }}</summary>
+  <ul>
+    <li>Description : {{ bundle.description }}</li>
+    <li>Price: {{ bundle.price }} €</li>
+    <li>
+      Discount:
+      {{
+        (
+          ((bundle.reelValuePrice! - bundle.price!) / bundle.reelValuePrice!) *
+          100
+        ).toFixed(0)
+      }}%
+    </li>
+    <li>Compostion :</li>
+    <ul>
+      @for (product of bundle.products; track $index) {
+      <li>
+        <a [routerLink]="['/catalog', product.id]">{{ product.name }}</a>
+      </li>
+      }
+    </ul>
+  </ul>
+</details>

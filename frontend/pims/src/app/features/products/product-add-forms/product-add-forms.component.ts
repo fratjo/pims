@@ -6,11 +6,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ProductService } from '../../core/services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../models/product.interface';
 import { first } from 'rxjs';
 import { Location } from '@angular/common';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../models/product.interface';
 
 @Component({
   selector: 'app-product-add-forms',

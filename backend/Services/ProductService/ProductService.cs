@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using Errors;
+using Microsoft.Extensions.Logging;
 using Models;
 using Repositories.ProductRepository;
 
@@ -17,9 +18,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public async Task<Product?> GetProductByIdAsync(string id)
     {
-        Guid productId = Guid.Parse(id);
-        
-        Product? product = await repository.GetProductById(productId);
+        var product = await repository.GetProductById(id);
         
         if (product is null) throw new NotFoundException($"Product with id: {id} was not found");
         
@@ -48,16 +47,45 @@ public class ProductService(IProductRepository repository) : IProductService
                     bundle.Name, 
                     bundle.Description, 
                     bundle.Price, 
+                    bundle.ReelValuePrice,
                     products));
         }
         return responses;
     }
 
+    public async Task<IEnumerable<BundleResponse>> GetBundlesByProductAsync(string id)
+    {
+        var bundles = await repository.GetBundlesByProduct(id);
+        
+        var responses = new List<BundleResponse>();
+        
+        foreach (var bundle in bundles)
+        {
+            var products = new List<Product>();
+            foreach (var pId in bundle.Products!)
+            {
+                var product = await repository.GetProductById(pId);
+                if (product is not null)
+                {
+                    products.Add(product);
+                }
+            }
+            responses.Add(
+                new BundleResponse(
+                    bundle.Id, 
+                    bundle.Name, 
+                    bundle.Description, 
+                    bundle.Price, 
+                    bundle.ReelValuePrice,
+                    products));
+        }
+        
+        return responses;
+    }
+
     public async Task<BundleResponse?> GetBundleByIdAsync(string id)
     {
-        var bundleId = Guid.Parse(id);
-        
-        var bundle = await repository.GetBundleById(bundleId);
+        var bundle = await repository.GetBundleById(id);
         
         if (bundle is null) throw new NotFoundException($"Bundle with id: {id} was not found");
         
@@ -76,6 +104,7 @@ public class ProductService(IProductRepository repository) : IProductService
             bundle.Name, 
             bundle.Description, 
             bundle.Price, 
+            bundle.ReelValuePrice,
             products);
     }
 
@@ -118,6 +147,7 @@ public class ProductService(IProductRepository repository) : IProductService
     
     public async Task<string> CreateProductBundleAsync(BundleInsertRequest bundle)
     {
+        
         var validationResults = BundleValidation.ValidateBundle(bundle);
 
         if (validationResults.Count != 0)
@@ -159,11 +189,12 @@ public class ProductService(IProductRepository repository) : IProductService
         {
             throw new BaseApplicationException("Bundle price must be at most 95% of the total price of the products");
         }
-        
+
+        var reelValuePrice = (decimal) totalPrice;
         
         bundle.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(bundle.Name!);
         
-        var newBundle = Bundle.CreateFromInsertRequest(bundle);
+        var newBundle = Bundle.CreateFromInsertRequest(bundle, reelValuePrice);
         
         await repository.AddBundle(newBundle);
         
@@ -176,9 +207,7 @@ public class ProductService(IProductRepository repository) : IProductService
     
     public async Task<Product?> UpdateProductAsync(string id, ProductUpdateRequest product)
     {   
-        var guid = Guid.Parse(id);
-        
-        var p = await repository.GetProductById(guid);
+        var p = await repository.GetProductById(id);
         
         if (p == null) throw new NotFoundException($"Product with id: {id} was not found");
         

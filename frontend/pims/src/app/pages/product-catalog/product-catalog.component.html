@@ -11,8 +11,14 @@
       <router-outlet></router-outlet>
     </div>
     <div class="action-buttons">
-      <a class="action-button" (click)="onProductEdit()">Editing</a>
-      <a class="action-button" (click)="onProductAdd()">Adding</a>
+      <div class="add-actions hidden">
+        <a class="action-button" (click)="onProductAdd()">Add Product</a>
+        <a class="action-button" (click)="onBundleAdd()">Add Bundle</a>
+      </div>
+      <div class="actions">
+        <a class="action-button" (click)="onProductEdit()">Edit Product</a>
+        <a class="action-button add-button" (click)="onAdding()">Add</a>
+      </div>
     </div>
   </div>
 </div>
