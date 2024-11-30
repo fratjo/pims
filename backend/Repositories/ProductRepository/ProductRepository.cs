@@ -9,13 +9,13 @@ public class ProductRepository : IProductRepository
     {
         var p1 = new Product("Wireless Mouse", 25.00M, 100, "Mouse", "Ergonomic wireless mouse");
         var p2 = new Product("Mouse Pad", 10.00M, 150, "Mouse", "Smooth mouse pad");
-        var p3 = new Product("Mechanical Keyboard", 70.00M, 80, "Mouse", "RGB mechanical keyboard");
-        var p4 = new Product("USB-C Hub", 40.00M, 50, "Mouse", "Multi-port USB-C hub");
-        var p5 = new Product("Laptop Stand", 30.00M, 75, "Mouse", "Adjustable laptop stand");
-        var p6 = new Product("Web Camera", 50.00M, 60, "Mouse", "HD web camera for streaming");
-        var p7 = new Product("Headphones", 80.00M, 40, "Mouse", "Noise-canceling head phones");
-        var p8 = new Product("HDMI Cable", 5.00M, 300, "Mouse", "6-foot HDMI cable");
-        var p9 = new Product("Wireless Charger", 20.00M, 90, "Mouse", "Fast wireless charger");
+        var p3 = new Product("Mechanical Keyboard", 70.00M, 80, "Keyboard", "RGB mechanical keyboard");
+        var p4 = new Product("USB-C Hub", 40.00M, 50, "Hub", "Multi-port USB-C hub");
+        var p5 = new Product("Laptop Stand", 30.00M, 75, "Asset", "Adjustable laptop stand");
+        var p6 = new Product("Web Camera", 50.00M, 60, "Visio", "HD web camera for streaming");
+        var p7 = new Product("Headphones", 80.00M, 40, "Audio", "Noise-canceling head phones");
+        var p8 = new Product("HDMI Cable", 5.00M, 300, "Visio", "6-foot HDMI cable");
+        var p9 = new Product("Wireless Charger", 20.00M, 90, "Charger", "Fast wireless charger");
         
         _products.Add(p1);
         _products.Add(p2);
@@ -58,6 +58,11 @@ public class ProductRepository : IProductRepository
     public async Task<Bundle?> GetBundleById(Guid id)
     {
         return await Task.FromResult(_bundles.FirstOrDefault(b => b.Id == id));
+    }
+
+    public async Task<IEnumerable<Bundle>> GetBundlesByProduct(Guid id)
+    {
+        return await Task.FromResult(_bundles.Where(b => b.Products != null && b.Products.Contains(id)).ToList());
     }
 
     public async Task<bool> CheckIfProductNameExists(string newName)

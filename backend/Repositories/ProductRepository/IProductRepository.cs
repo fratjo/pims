@@ -8,6 +8,7 @@ public interface IProductRepository
     Task<Product?> GetProductById(Guid id);
     Task<IEnumerable<Bundle>> GetBundles();
     Task<Bundle?> GetBundleById(Guid id);
+    Task<IEnumerable<Bundle>> GetBundlesByProduct(Guid id);
     Task<bool> CheckIfProductNameExists(string newName);
     Task<IEnumerable<string>> GetCategoryNames();
     Task<bool> AddProduct(Product product);

@@ -53,6 +53,37 @@ public class ProductService(IProductRepository repository) : IProductService
         return responses;
     }
 
+    public async Task<IEnumerable<BundleResponse>> GetBundlesByProductAsync(string id)
+    {
+        var productId = Guid.Parse(id);
+
+        var bundles = await repository.GetBundlesByProduct(productId);
+        
+        var responses = new List<BundleResponse>();
+        
+        foreach (var bundle in bundles)
+        {
+            var products = new List<Product>();
+            foreach (var pId in bundle.Products!)
+            {
+                var product = await repository.GetProductById(pId);
+                if (product is not null)
+                {
+                    products.Add(product);
+                }
+            }
+            responses.Add(
+                new BundleResponse(
+                    bundle.Id, 
+                    bundle.Name, 
+                    bundle.Description, 
+                    bundle.Price, 
+                    products));
+        }
+        
+        return responses;
+    }
+
     public async Task<BundleResponse?> GetBundleByIdAsync(string id)
     {
         var bundleId = Guid.Parse(id);
