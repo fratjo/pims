@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 using Errors;
+using Microsoft.Extensions.Logging;
 using Models;
 using Repositories.ProductRepository;
 
@@ -17,9 +18,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public async Task<Product?> GetProductByIdAsync(string id)
     {
-        Guid productId = Guid.Parse(id);
-        
-        Product? product = await repository.GetProductById(productId);
+        var product = await repository.GetProductById(id);
         
         if (product is null) throw new NotFoundException($"Product with id: {id} was not found");
         
@@ -56,9 +55,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public async Task<IEnumerable<BundleResponse>> GetBundlesByProductAsync(string id)
     {
-        var productId = Guid.Parse(id);
-
-        var bundles = await repository.GetBundlesByProduct(productId);
+        var bundles = await repository.GetBundlesByProduct(id);
         
         var responses = new List<BundleResponse>();
         
@@ -88,9 +85,7 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public async Task<BundleResponse?> GetBundleByIdAsync(string id)
     {
-        var bundleId = Guid.Parse(id);
-        
-        var bundle = await repository.GetBundleById(bundleId);
+        var bundle = await repository.GetBundleById(id);
         
         if (bundle is null) throw new NotFoundException($"Bundle with id: {id} was not found");
         
@@ -152,6 +147,7 @@ public class ProductService(IProductRepository repository) : IProductService
     
     public async Task<string> CreateProductBundleAsync(BundleInsertRequest bundle)
     {
+        
         var validationResults = BundleValidation.ValidateBundle(bundle);
 
         if (validationResults.Count != 0)
@@ -211,9 +207,7 @@ public class ProductService(IProductRepository repository) : IProductService
     
     public async Task<Product?> UpdateProductAsync(string id, ProductUpdateRequest product)
     {   
-        var guid = Guid.Parse(id);
-        
-        var p = await repository.GetProductById(guid);
+        var p = await repository.GetProductById(id);
         
         if (p == null) throw new NotFoundException($"Product with id: {id} was not found");
         

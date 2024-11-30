@@ -4,10 +4,11 @@ import { Bundles, Product } from '../../../models/product.interface';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
+import { BundlePreviewComponent } from '../../bundles/bundle-preview/bundle-preview.component';
 
 @Component({
   selector: 'app-product-preview',
-  imports: [AsyncPipe, NgIf, RouterLink],
+  imports: [AsyncPipe, BundlePreviewComponent],
   templateUrl: './product-preview.component.html',
   styleUrl: './product-preview.component.scss',
 })

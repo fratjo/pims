@@ -1,0 +1,52 @@
+<form [formGroup]="bundleForm" (ngSubmit)="onSubmit()">
+  <div>
+    <div>
+      <label for="name">Name :</label>
+      <input type="text" formControlName="name" />
+      @if (bundleForm.get('name')?.invalid && bundleForm.get('name')?.touched) {
+      <p class="invalid">Name is required</p>
+      }
+    </div>
+  </div>
+  <div>
+    <div>
+      <label for="price">Price :</label>
+      <input type="number" formControlName="price" step="0.01" min="0.01" />
+      @if (bundleForm.get('price')?.invalid && bundleForm.get('price')?.touched)
+      {
+      <p class="invalid">Price is required</p>
+      }
+    </div>
+  </div>
+
+  <div class="description">
+    <label for="description">Description: </label>
+    <textarea formControlName="description" style="resize: both"></textarea>
+  </div>
+
+  <button (click)="addProduct()">Add a product to the bundle</button>
+
+  <div formArrayName="products" class="form-group d-flex flex-column">
+    <label>Products :</label>
+    <div
+      [formGroupName]="index"
+      *ngFor="let product of products.controls; let index = index"
+    >
+      <div class="form-group d-flex flex-column">
+        <select formControlName="id">
+          @for (prod of productList; track $index) {
+          <option value="{{ prod.id }}">
+            {{ prod.name }} - {{ prod.price }} €
+          </option>
+          }
+        </select>
+        <button (click)="removeProduct(index)">remove</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button [disabled]="bundleForm.invalid" class="green">Valider</button>
+    <button (click)="goBack()" class="red">Cancel</button>
+  </div>
+</form>

@@ -103,6 +103,7 @@ namespace WebApi.Controllers
             }, exceptionHandlers);
         }
         
+        // api/products/bundles
         [HttpPost("bundles")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

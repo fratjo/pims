@@ -7,7 +7,7 @@ public interface IBundle
     string? Name { get; set; }
     string? Description { get; set; }
     decimal? Price { get; set; }
-    IEnumerable<Guid>? Products { get; set; }
+    IEnumerable<string>? Products { get; set; }
 }
 
 public class Bundle(
@@ -15,14 +15,14 @@ public class Bundle(
     string? bundleDescription, 
     decimal? bundlePrice,
     decimal? bundleReelValuePrice,
-    IEnumerable<Guid>? bundleProducts) : IBundle
+    IEnumerable<string>? bundleProducts) : IBundle
 {
     public Guid Id { get; set; } = Guid.NewGuid(); // Unique identifier for the bundle, assigned by the system when created
     public string? Name { get; set; } = bundleName;
     public string? Description { get; set; } = bundleDescription;
     public decimal? Price { get; set; } = bundlePrice;
     public decimal? ReelValuePrice { get; set; } = bundleReelValuePrice;
-    public IEnumerable<Guid>? Products { get; set; } = bundleProducts;
+    public IEnumerable<string>? Products { get; set; } = bundleProducts;
     
     public static Bundle CreateFromInsertRequest(BundleInsertRequest insertRequest, decimal bundleReelValuePrice)
     {
@@ -45,12 +45,12 @@ public record BundleInsertRequest : IBundle
     public string? Description { get; set; } = null!;
     
     [Required(ErrorMessage = "Bundle price is required")]
-    [Range(0.01, Double.MaxValue, ErrorMessage = "Bundle price must be greater than zero")]
+    [Range(0.01, double.MaxValue, ErrorMessage = "Bundle price must be greater than zero")]
     public decimal? Price { get; set; } = null!;
 
     [Required(ErrorMessage = "Products are required in a bundle")]
     [MinLength(2, ErrorMessage = "A bundle must contain at least 2 products")]
-    public IEnumerable<Guid>? Products { get; set; }
+    public IEnumerable<string>? Products { get; set; } = null!;
 }
 
 public class BundleResponse(

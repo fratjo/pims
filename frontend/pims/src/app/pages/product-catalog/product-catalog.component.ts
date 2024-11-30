@@ -36,6 +36,11 @@ export class ProductCatalogComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
+  onAdding(): void {
+    const addActions = document.querySelector('.add-actions');
+    if (addActions) addActions.classList.toggle('hidden');
+  }
+
   onProductEdit(): void {
     const currentUrl = this.router.routerState.snapshot.url;
     const currentId = currentUrl.split('/').pop();
@@ -43,7 +48,13 @@ export class ProductCatalogComponent implements OnInit {
   }
 
   onProductAdd(): void {
-    this.router.navigate(['add'], { relativeTo: this.route });
+    this.onAdding();
+    this.router.navigate(['add', 'product'], { relativeTo: this.route });
+  }
+
+  onBundleAdd(): void {
+    this.onAdding();
+    this.router.navigate(['add', 'bundle'], { relativeTo: this.route });
   }
 
   onSearchResultChange(value: string): void {

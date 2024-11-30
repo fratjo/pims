@@ -27,9 +27,9 @@ public class ProductRepository : IProductRepository
         _products.Add(p8);
         _products.Add(p9);
         
-        var b1 = new Bundle("Productivity Bundle", "Includes a Wireless Mouse and Mouse Pad for an optimal workspace.", 30.00M, 35.00M,new List<Guid> { p1.Id, p2.Id });
-        var b2 = new Bundle("Streaming Setup", "Includes a Web Camera and Headphones for the perfect streaming experience.", 100.00M, 130.00M,new List<Guid> { p6.Id, p7.Id });
-        var b3 = new Bundle("Complete Laptop Kit", "Includes a Laptop Stand, USB-C Hub, and Wireless Charger to enhance your laptop experience.", 70.00M,90.00M, new List<Guid> { p5.Id, p4.Id, p9.Id });
+        var b1 = new Bundle("Productivity Bundle", "Includes a Wireless Mouse and Mouse Pad for an optimal workspace.", 30.00M, 35.00M,new List<string> { p1.Id.ToString(), p2.Id.ToString() });
+        var b2 = new Bundle("Streaming Setup", "Includes a Web Camera and Headphones for the perfect streaming experience.", 100.00M, 130.00M,new List<string> { p6.Id.ToString(), p7.Id.ToString() });
+        var b3 = new Bundle("Complete Laptop Kit", "Includes a Laptop Stand, USB-C Hub, and Wireless Charger to enhance your laptop experience.", 70.00M,90.00M, new List<string> { p5.Id.ToString(), p4.Id.ToString(), p9.Id.ToString() });
         
         _bundles.Add(b1);
         _bundles.Add(b2);
@@ -45,9 +45,9 @@ public class ProductRepository : IProductRepository
         return await Task.FromResult<IEnumerable<Product>>(_products);
     }
     
-    public async Task<Product?> GetProductById(Guid id)
+    public async Task<Product?> GetProductById(string id)
     {
-        return await Task.FromResult(_products.FirstOrDefault(p => p.Id == id));
+        return await Task.FromResult(_products.FirstOrDefault(p => p.Id == Guid.Parse(id)));
     }
 
     public async Task<IEnumerable<Bundle>> GetBundles()
@@ -55,12 +55,12 @@ public class ProductRepository : IProductRepository
         return await Task.FromResult<IEnumerable<Bundle>>(_bundles);
     }
 
-    public async Task<Bundle?> GetBundleById(Guid id)
+    public async Task<Bundle?> GetBundleById(string id)
     {
-        return await Task.FromResult(_bundles.FirstOrDefault(b => b.Id == id));
+        return await Task.FromResult(_bundles.FirstOrDefault(b => b.Id == Guid.Parse(id)));
     }
 
-    public async Task<IEnumerable<Bundle>> GetBundlesByProduct(Guid id)
+    public async Task<IEnumerable<Bundle>> GetBundlesByProduct(string id)
     {
         return await Task.FromResult(_bundles.Where(b => b.Products != null && b.Products.Contains(id)).ToList());
     }

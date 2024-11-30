@@ -5,10 +5,10 @@ namespace Repositories.ProductRepository;
 public interface IProductRepository
 {
     Task<IEnumerable<Product>> GetProducts();
-    Task<Product?> GetProductById(Guid id);
+    Task<Product?> GetProductById(string id);
     Task<IEnumerable<Bundle>> GetBundles();
-    Task<Bundle?> GetBundleById(Guid id);
-    Task<IEnumerable<Bundle>> GetBundlesByProduct(Guid id);
+    Task<Bundle?> GetBundleById(string id);
+    Task<IEnumerable<Bundle>> GetBundlesByProduct(string id);
     Task<bool> CheckIfProductNameExists(string newName);
     Task<IEnumerable<string>> GetCategoryNames();
     Task<bool> AddProduct(Product product);

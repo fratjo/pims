@@ -57,6 +57,13 @@ export class ProductService {
       );
   }
 
+  postBundle(bundle: Product): Observable<ProductId> {
+    return this.httpClient.post<ProductId>(
+      'http://localhost:5002/api/products/bundles',
+      bundle
+    );
+  }
+
   putProduct(product: Product): Observable<Product> {
     return this.httpClient
       .put<Product>(`http://localhost:5002/api/products/${product.id}`, product)

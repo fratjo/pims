@@ -21,3 +21,10 @@ export interface Bundle {
   products?: Products;
 }
 export type Bundles = Bundle[];
+
+export interface BundleInsertRequest {
+  name: string;
+  description?: string;
+  price: number;
+  products: string[];
+}
