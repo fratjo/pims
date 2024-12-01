@@ -9,8 +9,9 @@ import {
 } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Bundle, Products } from '../../../models/product.interface';
+import { Bundle, Product, Products } from '../../../models/product.interface';
 import { Location, NgFor } from '@angular/common';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-bundle-add-forms',
@@ -48,7 +49,7 @@ export class BundleAddFormsComponent implements OnInit {
     return this.fb.group({
       name: [bundle.name, Validators.required],
       description: [bundle.description],
-      price: [bundle.price, Validators.required],
+      price: [bundle.price, [Validators.required, Validators.min(0)]],
       products: this.fb.array(
         bundle.products!.map((product) => {
           return this.fb.group({
@@ -77,6 +78,43 @@ export class BundleAddFormsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const minPrice =
+      0.6 *
+      this.productList
+        .filter((product: Product) => {
+          return this.bundleForm.value.products?.some(
+            (p: Product) => p.id === product.id
+          );
+        })
+        .reduce((acc, product) => {
+          return acc + product.price!;
+        }, 0);
+
+    const maxPrice =
+      0.95 *
+      this.productList
+        .filter((product: Product) => {
+          return this.bundleForm.value.products?.some(
+            (p: Product) => p.id === product.id
+          );
+        })
+        .reduce((acc, product) => {
+          return acc + product.price!;
+        }, 0);
+
+    if (
+      this.bundleForm.value.price < minPrice ||
+      this.bundleForm.value.price > maxPrice
+    ) {
+      const errorMessage = document.createElement('div');
+      errorMessage.innerText = `Price must be between ${minPrice} and ${maxPrice}`;
+      errorMessage.style.color = 'red';
+      const formElement = document.querySelector('.error-message');
+      formElement!.innerHTML = '';
+      formElement!.appendChild(errorMessage);
+      return;
+    }
+
     if (this.bundleForm.valid) {
       const formValue = this.bundleForm.value;
       const payload = {
@@ -98,6 +136,11 @@ export class BundleAddFormsComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error posting bundle:', err);
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = err.error.message;
+            errorMessage.style.color = 'red';
+            const formElement = document.querySelector('form');
+            formElement?.appendChild(errorMessage);
           },
         });
         this.router.navigate(['/catalog']);
